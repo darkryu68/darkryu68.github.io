@@ -2,55 +2,86 @@
 <script src='https://d3js.org/d3.v5.min.js'></script>
 <link rel="stylesheet" type="text/css" href="style.css" />
 <body onload='init()'>
-	<div class="sidenav">
-		<a href="#">About</a>
-		<a href="#">Services</a>
-		<a href="#">Clients</a>
-		<a href="#">Contact</a>
+	<div class="sidenav"><
+		<div>
+			<button type="button" class="button" onclick="load1()">1</button>
+			<button type="button" class="button" onclick="load2()">2</button>
+			<button type="button" class="button" onclick="load3()">3</button>
+			<button type="button" class="button" onclick="load4()">4</button>
+		</div>
 	</div>
 
 	<div class="main">
-		<h2>Sidenav Example</h2>
-		<p>This sidenav is always shown.</p>
-		<svg width=300 height=300>
+		<h1 class="mainTitle">Should gas be reclassified as green energy?</h1>
+		<br></br>
+		<br></br>
+		<p class="contentTitle" id="contentTitle"></p>
+		<svg width=600 height=600>
 		</svg>
 	</div>
+	
+	<div class="content">
+		<svg width=600 height=600>
+		</svg>
+	</div>
+	
 
 
 <script>
+let width = 500;
+let height = 500;
+let margin = 50;
+let data;
+
 async function init() {
-var width = 200;
-var height = 200;
-var margin = 50;
+	data = await d3.csv("owid-energy-data.csv");
 
-var xs = d3.scaleLog().domain([10,150]).range([0, width]);
-var ys = d3.scaleLog().domain([10,150]).range([height, 0]);
+	load1();
+}
 
-var data = await d3.csv("owid-energy-data.csv");
+function load1() {
+	d3.select("svg").selectAll("*").remove();
+}
 
-d3.select("svg")
-  .append("g")
-    .attr("transform", "translate("+margin+","+margin+")")
-  .selectAll("circle").data(data).enter().append("circle")
-    .attr('cx', function(d) {return xs(d.AverageCityMPG);})
-    .attr('cy', function(d) {return ys(d.AverageHighwayMPG);})
-    .attr('r', function(d) {return (2 + Number.parseInt(d.EngineCylinders));});
+function load2() {
+	d3.select("svg").selectAll("*").remove();
+	contentTitle.innerHTML = "United States: Percentage of electricity from gas by year.";
 
-d3.select("svg")
-  .append("g")
-    .attr("transform", "translate("+margin+","+margin+")")
-    .call(d3.axisLeft(ys)
-      .tickValues([10, 20, 50, 100])
-      .tickFormat(d3.format("~s")));
+	var xs = d3.scaleLinear().domain([2000,2020]).range([0, width]);
+	var ys = d3.scaleLinear().domain([15,45]).range([height, 0]);
 
-d3.select("svg")
-  .append("g")
-    .attr("transform", "translate("+margin+","+(height+margin)+")")
-    .call(d3.axisBottom(xs)
-      .tickValues([10, 20, 50, 100])
-      .tickFormat(d3.format("~s")));;
-	  
-	  }
+	d3.select("svg")
+	.append("path")
+		.attr("transform", "translate("+margin+","+margin+")")
+		.datum(data)
+		.attr("fill", "none")
+		.attr("stroke", "steelblue")
+		.attr("stroke-width", 5)
+		.attr("d", d3.line()
+			.x(function(d) { return xs(d.year) })
+			.y(function(d) { return ys(d.gas_share_energy) })
+        )  
+
+	d3.select("svg")
+	  .append("g")
+		.attr("transform", "translate("+margin+","+margin+")")
+		.call(d3.axisLeft(ys));
+
+	d3.select("svg")
+	  .append("g")
+		.attr("transform", "translate("+margin+","+(height+margin)+")")
+		.call(d3.axisBottom(xs));
+}
+
+function load3() {
+	d3.select("svg").selectAll("*").remove();
+}
+
+function load4() {
+	d3.select("svg").selectAll("*").remove();
+
+}
+
 </script>
 </body>
 </html>
