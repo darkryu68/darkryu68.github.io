@@ -9,6 +9,8 @@ body {
 	  height: 100%;
 	  width: 350px;
 	  position: fixed;
+	  display:flex;
+	  flex-direction: column;
 	  z-index: 1;
 	  top: 0;
 	  left: 0;
@@ -21,13 +23,38 @@ body {
 	padding: 6px 6px 6px 32px;
 	text-decoration: none;
 	font-size: 25px;
-	color: #818181;
+	color: blue;
+	display: block;
+}
+
+.sidenav h2 {
+	padding: 6px 6px 6px 32px;
+	text-decoration: none;
+	font-size: 25px;
+	color: white;
 	display: block;
 }
 
 .sidenav a:hover {
-	color: #f1f1f1;
+	color: white;
 }
+
+.info {
+	
+}
+
+.data {
+	margin-top: auto;
+}
+
+.data p {
+	padding: 6px 6px 6px 32px;
+	text-decoration: none;
+	font-size: 25px;
+	color: #818181;
+	display: block;
+}
+
 
 .main {
 	margin-left: 350px; /* Same as the width of the sidenav */
@@ -42,35 +69,41 @@ body {
 }
 
 .content {
-	justify-content: center;
 	text-align: center;
 	vertical-align: middle;
 
 }
 
 .button {
-  display: inline-block;
-  vertical-align: top;
-  width: 30px;
-  height: 30px;
-  line-height: 30px;
-  text-align: center;
-  border: 1px solid #0066cc;
-  background-color: #white;
-  color: #ffffff;
-  padding: 5px 10px;
+	display: inline-block;
+	vertical-align: top;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	border: 1px solid #0066cc;
+	background-color: #white;
+	color: #black;
+	padding: 5px 10px;
+	}
+
+.button-number {
+	width: 30px;
+}
+
+.button-next {
+	width: 80px;
 }
 
 .button:hover {
-  border: 1px solid #0099cc;
-  background-color: #00aacc;
-  color: #ffffff;
-  padding: 5px 10px;
+	border: 1px solid #0099cc;
+	background-color: #00aacc;
+	color: #ffffff;
+	padding: 5px 10px;
 }
 
 .button:disabled,
 button[disabled]{
-  border: 1px solid #999999;
-  background-color: #cccccc;
-  color: #666666;
+	border: 1px solid #999999;
+	background-color: #dark-grey;
+	color: #ffffff;
 }

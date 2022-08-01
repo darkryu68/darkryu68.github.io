@@ -2,26 +2,40 @@
 <script src='https://d3js.org/d3.v5.min.js'></script>
 <link rel="stylesheet" type="text/css" href="style.css" />
 <body onload='init()'>
-	<div class="sidenav"><
+	<div class="sidenav">
 		<div>
-			<button type="button" class="button" onclick="load1()">1</button>
-			<button type="button" class="button" onclick="load2()">2</button>
-			<button type="button" class="button" onclick="load3()">3</button>
-			<button type="button" class="button" onclick="load4()">4</button>
+			<button type="button" id="b1" class="button button-number" onclick="load1()">1</button>
+			<button type="button" id="b2" class="button button-number" onclick="load2()">2</button>
+			<button type="button" id="b3" class="button button-number" onclick="load3()">3</button>
+			<button type="button" id="b4" class="button button-number" onclick="load4()">4</button>
+			<button type="button" id="b5" class="button button-number" onclick="load5()">5</button>
+			<button type="button" id="bnext" class="button button-next" onclick="loadnext()">Next</button>
 		</div>
+		
+		<div class ="info">
+			<h2 id="contentNav">gda</h2>
+			<a id="hrefCNBC" href="https://www.cnbc.com/2022/07/06/europe-natural-gas-nuclear-are-green-energy-in-some-circumstances-.html">fdsa</a>
+		</div>
+		
+		<div class ="data">
+			<h2>Data Source:</h2>
+			<a id="hrefData" href="https://github.com/owid/energy-data">owid-energy-data</a>
+			<br></br>
+			<br></br>
+		</div>
+		
+		
 	</div>
 
 	<div class="main">
 		<h1 class="mainTitle">Should gas be reclassified as green energy?</h1>
 		<br></br>
 		<br></br>
-		<p class="contentTitle" id="contentTitle"></p>
-		<svg width=600 height=600>
-		</svg>
+		<h2 class="contentTitle=" id="contentTitle"></h2>
 	</div>
 	
 	<div class="content">
-		<svg width=600 height=600>
+		<svg width=700 height=600>
 		</svg>
 	</div>
 	
@@ -35,16 +49,74 @@ let data;
 
 async function init() {
 	data = await d3.csv("owid-energy-data.csv");
-
 	load1();
 }
 
 function load1() {
-	d3.select("svg").selectAll("*").remove();
+	clear();
+	document.getElementById("b1").disabled = true;
+	contentNav.innerHTML = "In 2022 in response to various energy problems, both in price increases and shortfalls the European Union voted for gas to be reclassified as green energy.";
+	hrefCNBC.innerHTML = "CNBC article";
+	
+	contentTitle.innerHTML = "One of the best sets of data for analyzing this question comes from the United States. The United States invested heavily in gas after the discovery of hydraulic fracking in 2005. Specifically in replacing their coal electricity with gas. Examine the following data slides and decide for yourself how the impact gas has on greenhouse gasses should be classified. Many countries may end up having to do the same thing in the coming years as well as taking into account the economic and environmental factors of gas.";
 }
 
 function load2() {
-	d3.select("svg").selectAll("*").remove();
+	clear();
+	document.getElementById("b2").disabled = true;
+	
+	contentTitle.innerHTML = "United States: Percentage of electricity from each source by year.";
+	
+	var stack = d3.stack().keys(["coal_share_elec", "gas_share_elec", "nuclear_share_elec", "oil_share_elec", "renewables_share_elec"]);
+	var colors = ["brown", "steelblue", "red", "black", "green"];
+	var stackedData = stack(data);
+	
+	var xs = d3.scaleLinear().domain([2000,2020]).range([0, width]);
+	var ys = d3.scaleLinear().domain([0,100]).range([height, 0]);
+	
+	d3.select("svg")
+	  .append("g")
+		.attr("transform", "translate("+margin+","+margin+")")
+		.call(d3.axisLeft(ys));
+
+	d3.select("svg")
+	  .append("g")
+		.attr("transform", "translate("+margin+","+(height+margin)+")")
+		.call(d3.axisBottom(xs));
+	
+	var area = d3.area()
+		.x(function(d){return xs(d.data.year);})
+		.y0(function(d){return ys(d[0]);})
+		.y1(function(d){return ys(d[1]);});
+	
+	var series = d3.select("svg").selectAll("g.series")
+		.data(stackedData)
+		.enter().append("g")
+		.attr("class", "series");
+		
+	series.append("path")
+		.attr("transform", "translate("+margin+","+margin+")")
+		.style("fill", function(d,i){return colors[i];})
+		.attr("d", function(d){return area(d);});
+		
+		d3.select("svg").append("circle").attr("cx",600).attr("cy",130).attr("r", 6).style("fill", "green")
+		d3.select("svg").append("circle").attr("cx",600).attr("cy",160).attr("r", 6).style("fill", "black")
+		d3.select("svg").append("circle").attr("cx",600).attr("cy",190).attr("r", 6).style("fill", "red")
+		d3.select("svg").append("circle").attr("cx",600).attr("cy",220).attr("r", 6).style("fill", "steelblue")
+		d3.select("svg").append("circle").attr("cx",600).attr("cy",250).attr("r", 6).style("fill", "brown")
+		d3.select("svg").append("text").attr("x", 615).attr("y", 130).text("Renewables").style("font-size", "15px").attr("alignment-baseline","middle")
+		d3.select("svg").append("text").attr("x", 615).attr("y", 160).text("Oil").style("font-size", "15px").attr("alignment-baseline","middle")
+		d3.select("svg").append("text").attr("x", 615).attr("y", 190).text("Nuclear").style("font-size", "15px").attr("alignment-baseline","middle")
+		d3.select("svg").append("text").attr("x", 615).attr("y", 220).text("Gas").style("font-size", "15px").attr("alignment-baseline","middle")
+		d3.select("svg").append("text").attr("x", 615).attr("y", 250).text("Coal").style("font-size", "15px").attr("alignment-baseline","middle")
+	
+	
+}
+
+function load3() {
+	clear();
+	document.getElementById("b3").disabled = true;
+	
 	contentTitle.innerHTML = "United States: Percentage of electricity from gas by year.";
 
 	var xs = d3.scaleLinear().domain([2000,2020]).range([0, width]);
@@ -60,6 +132,38 @@ function load2() {
 		.attr("d", d3.line()
 			.x(function(d) { return xs(d.year) })
 			.y(function(d) { return ys(d.gas_share_energy) })
+        )
+
+	d3.select("svg")
+	  .append("g")
+		.attr("transform", "translate("+margin+","+margin+")")
+		.call(d3.axisLeft(ys));
+
+	d3.select("svg")
+	  .append("g")
+		.attr("transform", "translate("+margin+","+(height+margin)+")")
+		.call(d3.axisBottom(xs));
+}
+
+function load4() {
+	clear();
+	document.getElementById("b4").disabled = true;
+	
+	contentTitle.innerHTML = "United States: Greenhouse gas emissions by year.";
+
+	var xs = d3.scaleLinear().domain([2000,2020]).range([0, width]);
+	var ys = d3.scaleLinear().domain([1400,2200]).range([height, 0]);
+
+	d3.select("svg")
+	.append("path")
+		.attr("transform", "translate("+margin+","+margin+")")
+		.datum(data)
+		.attr("fill", "none")
+		.attr("stroke", "green")
+		.attr("stroke-width", 5)
+		.attr("d", d3.line()
+			.x(function(d) { return xs(d.year) })
+			.y(function(d) { return ys(d.greenhouse_gas_emissions) })
         )  
 
 	d3.select("svg")
@@ -73,13 +177,80 @@ function load2() {
 		.call(d3.axisBottom(xs));
 }
 
-function load3() {
-	d3.select("svg").selectAll("*").remove();
+function load5() {
+	clear();
+	document.getElementById("b5").disabled = true;
+	document.getElementById("bnext").disabled = true;
+	
+	contentTitle.innerHTML = "United States: overlay greenhouse emissions and gas by year.";
+	
+	var xs = d3.scaleLinear().domain([2000,2020]).range([0, width]);
+	var ys = d3.scaleLinear().domain([15,45]).range([height, 0]);
+
+	d3.select("svg")
+	.append("path")
+		.attr("transform", "translate("+margin+","+margin+")")
+		.datum(data)
+		.attr("fill", "none")
+		.attr("stroke", "steelblue")
+		.attr("stroke-width", 5)
+		.attr("d", d3.line()
+			.x(function(d) { return xs(d.year) })
+			.y(function(d) { return ys(d.gas_share_energy) })
+        )
+	
+	var xs = d3.scaleLinear().domain([2000,2020]).range([0, width]);
+	var ys = d3.scaleLinear().domain([1400,2200]).range([height, 0]);
+
+	d3.select("svg")
+	.append("path")
+		.attr("transform", "translate("+margin+","+margin+")")
+		.datum(data)
+		.attr("fill", "none")
+		.attr("stroke", "green")
+		.attr("stroke-width", 5)
+		.attr("d", d3.line()
+			.x(function(d) { return xs(d.year) })
+			.y(function(d) { return ys(d.greenhouse_gas_emissions) })
+        )
+
+	d3.select("svg")
+	  .append("g")
+		.attr("transform", "translate("+margin+","+(height+margin)+")")
+		.call(d3.axisBottom(xs));		
 }
 
-function load4() {
-	d3.select("svg").selectAll("*").remove();
+function loadnext() {
+	if( document.getElementById("b1").disabled === true) {
+		load2();
+		return;
+	}
+	if( document.getElementById("b2").disabled === true) {
+		load3();
+		return;
+	}	
+	if( document.getElementById("b3").disabled === true) {
+		load4();
+		return;
+	}
+	if( document.getElementById("b4").disabled === true) {
+		load5();
+		return;
+	}	
+}
 
+function clear() {
+	d3.select("svg").selectAll("*").remove();
+	document.getElementById("b1").disabled = false;
+	document.getElementById("b2").disabled = false;
+	document.getElementById("b3").disabled = false;
+	document.getElementById("b4").disabled = false;
+	document.getElementById("b5").disabled = false;
+	document.getElementById("bnext").disabled = false;
+	contentTitle.innerHTML = "";
+	contentNav.innerHTML = "";
+	hrefCNBC.innerHTML = "";
+	
 }
 
 </script>
