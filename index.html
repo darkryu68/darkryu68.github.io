@@ -1,5 +1,6 @@
 <html>
 <script src='https://d3js.org/d3.v5.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/d3-annotation/2.5.1/d3-annotation.min.js'></script>
 <link rel="stylesheet" type="text/css" href="style.css" />
 <body onload='init()'>
 	<div class="sidenav">
@@ -13,7 +14,7 @@
 		</div>
 		
 		<div class ="info">
-			<h2 id="contentNav">gda</h2>
+			<h2 id="contentNav"></h2>
 			<a id="hrefCNBC" href="https://www.cnbc.com/2022/07/06/europe-natural-gas-nuclear-are-green-energy-in-some-circumstances-.html">fdsa</a>
 		</div>
 		
@@ -64,7 +65,7 @@ function load1() {
 function load2() {
 	clear();
 	document.getElementById("b2").disabled = true;
-	
+	contentNav.innerHTML = "Overview of United States production of electricity. It shows the US started investing heavily in Hydraulic Fracking of shale gas around 2006 and renewables around 2015. In both cases while reducing coal.";
 	contentTitle.innerHTML = "United States: Percentage of electricity from each source by year.";
 	
 	var stack = d3.stack().keys(["coal_share_elec", "gas_share_elec", "nuclear_share_elec", "oil_share_elec", "renewables_share_elec"]);
@@ -111,12 +112,65 @@ function load2() {
 		d3.select("svg").append("text").attr("x", 615).attr("y", 250).text("Coal").style("font-size", "15px").attr("alignment-baseline","middle")
 	
 	
+		const annotations = [
+  {
+    note: {
+      label: "US starts Hydraulic Fracking",
+      title: "2005"
+    },
+	color: "black",
+    x: 175,
+    y: 85,
+    dy: 375,
+    dx: 0
+  },
+  {
+    note: {
+      label: "50% increase in renewables, mostly after 2015",
+      title: "2000-2020"
+    },
+	color: "black",
+    x: 550,
+    y: 105,
+    dy: -5,
+    dx: 20
+  },
+  {
+    note: {
+      label: "100% increase in gas",
+      title: "2000-2020"
+    },
+	color: "black",
+    x: 550,
+    y: 350,
+    dy: 5,
+    dx: 20
+  },
+  {
+    note: {
+      label: "50% decrease in coal",
+      title: "2000-2020"
+    },
+	color: "black",
+    x: 550,
+    y: 500,
+    dy: 5,
+    dx: 20
+  }
+]
+
+	const makeAnnotations = d3.annotation()
+	  .annotations(annotations)
+	d3.select("svg")
+	  .append("g")
+	  .call(makeAnnotations)
 }
 
 function load3() {
 	clear();
 	document.getElementById("b3").disabled = true;
 	
+	contentNav.innerHTML = "Closer look at increase in electricity generation from gas in the United States"
 	contentTitle.innerHTML = "United States: Percentage of electricity from gas by year.";
 
 	var xs = d3.scaleLinear().domain([2000,2020]).range([0, width]);
@@ -143,12 +197,33 @@ function load3() {
 	  .append("g")
 		.attr("transform", "translate("+margin+","+(height+margin)+")")
 		.call(d3.axisBottom(xs));
+		
+		const annotations = [
+  {
+    note: {
+      label: "US starts Hydraulic Fracking",
+      title: "2005"
+    },
+	color: "black",
+    x: 175,
+    y: 425,
+    dy: -200,
+    dx: 0
+  }
+]
+
+	const makeAnnotations = d3.annotation()
+	  .annotations(annotations)
+	d3.select("svg")
+	  .append("g")
+	  .call(makeAnnotations)
 }
 
 function load4() {
 	clear();
 	document.getElementById("b4").disabled = true;
 	
+	contentNav.innerHTML = "Now one of the most important parts is the change in greenhouse gas emissions in the United States during this time. It shows that emissions started to fall in 2008 and increased around 2015 as we invested in renewables.";
 	contentTitle.innerHTML = "United States: Greenhouse gas emissions by year.";
 
 	var xs = d3.scaleLinear().domain([2000,2020]).range([0, width]);
@@ -175,6 +250,26 @@ function load4() {
 	  .append("g")
 		.attr("transform", "translate("+margin+","+(height+margin)+")")
 		.call(d3.axisBottom(xs));
+		
+				const annotations = [
+  {
+    note: {
+      label: "US starts Hydraulic Fracking",
+      title: "2005"
+    },
+	color: "black",
+    x: 175,
+    y: 85,
+    dy: 200,
+    dx: 0
+  }
+]
+
+	const makeAnnotations = d3.annotation()
+	  .annotations(annotations)
+	d3.select("svg")
+	  .append("g")
+	  .call(makeAnnotations)
 }
 
 function load5() {
@@ -182,6 +277,7 @@ function load5() {
 	document.getElementById("b5").disabled = true;
 	document.getElementById("bnext").disabled = true;
 	
+	contentNav.innerHTML = "Comparing them seems to indicate investing in gas reduces greenhouse emissions. Maybe not as much as renewables so it will be up to countries to decide the other costs and benefits of each."
 	contentTitle.innerHTML = "United States: overlay greenhouse emissions and gas by year.";
 	
 	var xs = d3.scaleLinear().domain([2000,2020]).range([0, width]);
@@ -217,7 +313,27 @@ function load5() {
 	d3.select("svg")
 	  .append("g")
 		.attr("transform", "translate("+margin+","+(height+margin)+")")
-		.call(d3.axisBottom(xs));		
+		.call(d3.axisBottom(xs));
+
+		const annotations = [
+  {
+    note: {
+      label: "US starts Hydraulic Fracking",
+      title: "2005"
+    },
+	color: "black",
+    x: 175,
+    y: 85,
+    dy: 375,
+    dx: 0
+  }
+]
+
+	const makeAnnotations = d3.annotation()
+	  .annotations(annotations)
+	d3.select("svg")
+	  .append("g")
+	  .call(makeAnnotations)		
 }
 
 function loadnext() {
